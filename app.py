@@ -189,15 +189,17 @@ with col_center:
       }
       /* ── make ALL buttons in center col tall, narrow & centered ── */
       div[data-testid="stButton"] button {
-        height: 34px;
+        height: auto;
         min-height: 34px;
         font-size: 15px;
-        padding: 0px 6px;
-        line-height: 1;
-        max-width: 90px;
+        padding: 6px 8px;
+        line-height: 1.3;
+        max-width: 110px;
         width: 100% !important;
-        margin: 1px 0 !important;
+        margin: 0 auto;
         display: block;
+        white-space: normal;
+        word-wrap: break-word;
       }
       /* remove the extra vertical gap Streamlit adds around button wrappers */
       div[data-testid="stButton"] {
@@ -206,17 +208,17 @@ with col_center:
         justify-content: center;
       }
       div[data-testid="column"] {
-        padding: 0 1px;
+        padding: 0;
         display: flex;
         justify-content: center;
       }
       /* ── column gap ── */
       div[data-testid="stHorizontalBlock"] {
-        gap: 0.05rem;
+        gap: 0rem;
       }
       /* ── shorter, centered progress bar ── */
       .stProgress {
-        max-width: 300px;
+        max-width: 320px;
         margin: 0 auto;
       }
       /* ── mobile ── */
@@ -226,15 +228,17 @@ with col_center:
         .coord, .coord-w { font-size: 7px; }
         .legend-row     { font-size: 10px; gap: 6px; }
         div[data-testid="stButton"] button {
-          height: 28px;
+          height: auto;
           min-height: 28px;
           font-size: 12px;
-          padding: 0px 4px;
-          line-height: 1;
-          max-width: 70px;
+          padding: 4px 6px;
+          line-height: 1.2;
+          max-width: 90px;
+          white-space: normal;
+          word-wrap: break-word;
         }
         div[data-testid="stHorizontalBlock"] {
-          gap: 0.05rem;
+          gap: 0rem;
         }
         .stProgress {
           max-width: 240px;
