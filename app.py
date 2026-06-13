@@ -139,6 +139,11 @@ with col_center:
     <style>
       /* ── maze container — everything inherits this width ── */
       .maze-container {
+        max-width: 100%;
+        margin: 0 auto;
+      }
+      /* ── maze table wrapper — keeps the grid compact & centered ── */
+      .maze-table-wrap {
         max-width: 520px;
         margin: 0 auto;
       }
@@ -223,6 +228,7 @@ with col_center:
       /* ── mobile ── */
       @media (max-width: 768px) {
         .maze-container { max-width: 100%; }
+        .maze-table-wrap { max-width: 100%; }
         .maze-table td  { font-size: 8px; }
         .coord, .coord-w { font-size: 7px; }
         .legend-row     { font-size: 10px; gap: 6px; }
@@ -302,7 +308,7 @@ with col_center:
         maze_rows += "</tr>"
 
     st.markdown(
-        f'<div class="maze-container"><table class="maze-table">{maze_rows}</table></div>',
+        f'<div class="maze-table-wrap"><table class="maze-table">{maze_rows}</table></div>',
         unsafe_allow_html=True,
     )
 
