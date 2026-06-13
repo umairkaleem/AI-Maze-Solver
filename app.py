@@ -206,13 +206,13 @@ with col_center:
         justify-content: center;
       }
       div[data-testid="column"] {
-        padding: 0 1px;
+        padding: 0;
         display: flex;
         justify-content: center;
       }
       /* ── column gap ── */
       div[data-testid="stHorizontalBlock"] {
-        gap: 0.05rem;
+        gap: 0rem;
       }
       /* ── shorter, centered progress bar ── */
       .stProgress {
@@ -234,7 +234,7 @@ with col_center:
           max-width: 70px;
         }
         div[data-testid="stHorizontalBlock"] {
-          gap: 0.05rem;
+          gap: 0rem;
         }
         .stProgress {
           max-width: 240px;
