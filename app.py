@@ -71,8 +71,8 @@ st.markdown("""
             border-radius:10px;padding:14px 18px;margin-bottom:5px;
             border-left:5px solid #1a56a0;">
   <p style="font-size:15px;color:#e0e0e0;margin:0 0 8px 0;font-weight:600;">
-    🎓 Hands-on AI learning &mdash;
-    <span style="color:#4fc3f7;">Sir Syed CASE Institute of Technology</span>
+    🎓  Learn Algorithms the Smart Way &mdash;
+    <span style="color:#4fc3f7;">Try & Learn</span>
   </p>
   <p style="font-size:13px;color:#bbb;margin:0 0 10px 0;line-height:1.7;">
     Solve the maze yourself first, then watch
