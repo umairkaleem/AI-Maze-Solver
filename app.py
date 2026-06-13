@@ -196,7 +196,7 @@ with col_center:
         line-height: 1;
         max-width: 90px;
         width: 100% !important;
-        margin: 0 auto;
+        margin: 1px 0 !important;
         display: block;
       }
       /* remove the extra vertical gap Streamlit adds around button wrappers */
@@ -216,7 +216,7 @@ with col_center:
       }
       /* ── shorter, centered progress bar ── */
       .stProgress {
-        max-width: 320px;
+        max-width: 300px;
         margin: 0 auto;
       }
       /* ── mobile ── */
