@@ -194,7 +194,7 @@ with col_center:
         font-size: 15px;
         padding: 0px 6px;
         line-height: 1;
-        max-width: 120px;
+        max-width: 90px;
         width: 100% !important;
         margin: 0 auto;
         display: block;
@@ -206,13 +206,18 @@ with col_center:
         justify-content: center;
       }
       div[data-testid="column"] {
-        padding: 0 2px;
+        padding: 0 1px;
         display: flex;
         justify-content: center;
       }
       /* ── column gap ── */
       div[data-testid="stHorizontalBlock"] {
-        gap: 0.3rem;
+        gap: 0.05rem;
+      }
+      /* ── shorter, centered progress bar ── */
+      .stProgress {
+        max-width: 320px;
+        margin: 0 auto;
       }
       /* ── mobile ── */
       @media (max-width: 768px) {
@@ -226,10 +231,13 @@ with col_center:
           font-size: 12px;
           padding: 0px 4px;
           line-height: 1;
-          max-width: 90px;
+          max-width: 70px;
         }
         div[data-testid="stHorizontalBlock"] {
-          gap: 0.2rem;
+          gap: 0.05rem;
+        }
+        .stProgress {
+          max-width: 240px;
         }
       }
     </style>
@@ -243,13 +251,13 @@ with col_center:
                 unsafe_allow_html=True)
 
     # UP — centered, same width as the 3 bottom buttons combined
-    u1, u2, u3 = st.columns([1, 4, 1])
+    u1, u2, u3 = st.columns([1, 2, 1])
     with u2:
         if st.button("⬆", key="up", use_container_width=True):
             move_player(-1, 0); st.rerun()
 
     # LEFT / DOWN / RIGHT — centered block matching UP width
-    l1, l2, l3 = st.columns([1, 4, 1])
+    l1, l2, l3 = st.columns([1, 2, 1])
     with l2:
         c1, c2, c3 = st.columns(3)
         with c1:
