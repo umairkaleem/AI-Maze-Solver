@@ -187,11 +187,13 @@ with col_center:
         margin-right: 3px;
         vertical-align: middle;
       }
-      /* ── make ALL buttons in center col tall & uniform ── */
+      /* ── make ALL buttons in center col compact ── */
       div[data-testid="stButton"] button {
-        height: 40px;
-        font-size: 16px;
-        padding: 0px 8px;
+        height: 28px;
+        font-size: 13px;
+        padding: 0px 6px;
+        min-height: unset;
+        line-height: 1;
       }
       /* ── column gap ── */
       div[data-testid="stHorizontalBlock"] {
@@ -203,7 +205,7 @@ with col_center:
         .maze-table td  { font-size: 8px; }
         .coord, .coord-w { font-size: 7px; }
         .legend-row     { font-size: 10px; gap: 6px; }
-        div[data-testid="stButton"] button { height: 36px; font-size: 14px; }
+        div[data-testid="stButton"] button { height: 26px; font-size: 12px; }
       }
     </style>
     """, unsafe_allow_html=True)
