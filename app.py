@@ -68,7 +68,7 @@ st.title("🧩 AI Maze Solver & Pathfinding Visualizer")
 
 st.markdown("""
 <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);
-            border-radius:8px;padding:6px 18px;margin-bottom:5px;
+            border-radius:10px;padding:14px 18px;margin-bottom:5px;
             border-left:5px solid #1a56a0;">
   <p style="font-size:15px;color:#e0e0e0;margin:0 0 8px 0;font-weight:600;">
     🎓 Hands-on AI learning &mdash;
@@ -189,13 +189,22 @@ with col_center:
       }
       /* ── make ALL buttons in center col tall & uniform ── */
       div[data-testid="stButton"] button {
-        height: 40px;
-        font-size: 16px;
-        padding: 0px 8px;
+        height: 34px;
+        min-height: 34px;
+        font-size: 15px;
+        padding: 0px 6px;
+        line-height: 1;
+      }
+      /* remove the extra vertical gap Streamlit adds around button wrappers */
+      div[data-testid="stButton"] {
+        margin: 0;
+      }
+      div[data-testid="column"] {
+        padding: 0 2px;
       }
       /* ── column gap ── */
       div[data-testid="stHorizontalBlock"] {
-        gap: 0.4rem;
+        gap: 0.3rem;
       }
       /* ── mobile ── */
       @media (max-width: 768px) {
@@ -203,7 +212,16 @@ with col_center:
         .maze-table td  { font-size: 8px; }
         .coord, .coord-w { font-size: 7px; }
         .legend-row     { font-size: 10px; gap: 6px; }
-        div[data-testid="stButton"] button { height: 36px; font-size: 14px; }
+        div[data-testid="stButton"] button {
+          height: 28px;
+          min-height: 28px;
+          font-size: 13px;
+          padding: 0px 4px;
+          line-height: 1;
+        }
+        div[data-testid="stHorizontalBlock"] {
+          gap: 0.2rem;
+        }
       }
     </style>
     """, unsafe_allow_html=True)
