@@ -132,65 +132,112 @@ with col_left:
         use_container_width=True, height=340
     )
 
-# ── CENTER: D-pad → Maze → Legend → Step controls ────────────────
+# ── CENTER: D-pad → Maze → Step controls → Legend ────────────────
 with col_center:
 
-    # Inject CSS: constrain all buttons in center col to maze width
-    # and make D-pad compact square buttons
     st.markdown("""
     <style>
-      /* maze + all controls share same max-width, centered */
-      .maze-table { border-collapse:collapse; width:100%; table-layout:fixed; margin:0 auto; }
-      .maze-table td {
-        height:42px;
-        text-align:center; vertical-align:middle;
-        font-size:11px; font-family:monospace;
-        border:1px solid #aaa; padding:0; overflow:hidden;
+      /* ── maze container — everything inherits this width ── */
+      .maze-container {
+        max-width: 520px;
+        margin: 0 auto;
       }
-      .cell-wall     { background:#111; }
-      .cell-empty    { background:#fff; }
-      .cell-start    { background:#00cc44; }
-      .cell-goal     { background:#ff3333; }
-      .cell-player   { background:#9900cc; }
-      .cell-human    { background:#6495ed; }
-      .cell-explored { background:#ffd700; }
-      .cell-path     { background:#1a56cc; color:#fff; }
-      .coord         { font-size:9px; color:#333; }
-      .coord-w       { font-size:9px; color:#fff; }
-      /* legend */
+      /* ── maze table ── */
+      .maze-table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+      }
+      .maze-table td {
+        width: 10%;
+        aspect-ratio: 1 / 1;
+        height: auto;
+        text-align: center;
+        vertical-align: middle;
+        border: 1px solid #aaa;
+        font-size: 11px;
+        font-family: monospace;
+        padding: 0;
+        overflow: hidden;
+      }
+      .cell-wall     { background: #111; }
+      .cell-empty    { background: #fff; }
+      .cell-start    { background: #00cc44; }
+      .cell-goal     { background: #ff3333; }
+      .cell-player   { background: #9900cc; }
+      .cell-human    { background: #6495ed; }
+      .cell-explored { background: #ffd700; }
+      .cell-path     { background: #1a56cc; color: #fff; }
+      .coord         { font-size: 9px; color: #333; }
+      .coord-w       { font-size: 9px; color: #fff; }
+      /* ── legend ── */
       .legend-row {
-        display:flex; gap:10px; flex-wrap:wrap;
-        font-size:12px; justify-content:center; margin:8px 0;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 10px;
+        font-size: 12px;
       }
       .legend-dot {
-        display:inline-block; width:12px; height:12px;
-        border-radius:2px; margin-right:3px; vertical-align:middle;
+        display: inline-block;
+        width: 12px; height: 12px;
+        border-radius: 2px;
+        margin-right: 3px;
+        vertical-align: middle;
+      }
+      /* ── make ALL buttons in center col tall & uniform ── */
+      div[data-testid="stButton"] button {
+        height: 52px;
+        font-size: 20px;
+      }
+      /* ── column gap ── */
+      div[data-testid="stHorizontalBlock"] {
+        gap: 0.4rem;
+      }
+      /* ── mobile ── */
+      @media (max-width: 768px) {
+        .maze-container { max-width: 100%; }
+        .maze-table td  { font-size: 8px; }
+        .coord, .coord-w { font-size: 7px; }
+        .legend-row     { font-size: 10px; gap: 6px; }
+        div[data-testid="stButton"] button { height: 48px; font-size: 18px; }
       }
     </style>
     """, unsafe_allow_html=True)
 
-    # ── D-PAD: compact 3-col layout ─────────────────────────────
-    st.markdown("<p style='text-align:center;font-weight:600;margin:0 0 2px 0;'>🕹️ Move Player</p>",
+    # Open maze-container div
+    st.markdown('<div class="maze-container">', unsafe_allow_html=True)
+
+    # ── D-PAD — large buttons, same style as step controls ───────
+    st.markdown("<p style='text-align:center;font-weight:600;margin:0 0 4px 0;'>🕹️ Move Player</p>",
                 unsafe_allow_html=True)
 
-    # Row 1: Up button centered
-    _, cu, _ = st.columns([2, 1, 2])
-    with cu:
+    # UP — centered, same width as the 3 bottom buttons combined
+    u1, u2, u3 = st.columns([1, 4, 1])
+    with u2:
         if st.button("⬆", key="up", use_container_width=True):
             move_player(-1, 0); st.rerun()
-    # Row 2: Left Down Right (3 equal, rest empty)
-    cl, cd, cr, _a, _b = st.columns([1, 1, 1, 1, 1])
-    with cl:
-        if st.button("⬅", key="lft", use_container_width=True):
-            move_player(0, -1); st.rerun()
-    with cd:
-        if st.button("⬇", key="dn", use_container_width=True):
-            move_player(1, 0); st.rerun()
-    with cr:
-        if st.button("➡", key="rgt", use_container_width=True):
-            move_player(0, 1); st.rerun()
 
-    # ── MAZE TABLE ──────────────────────────────────────────────
+    # LEFT / DOWN / RIGHT — centered block matching UP width
+    l1, l2, l3 = st.columns([1, 4, 1])
+    with l2:
+        c1, c2, c3 = st.columns(3)
+        with c1:
+            if st.button("⬅", key="lft", use_container_width=True):
+                move_player(0, -1); st.rerun()
+        with c2:
+            if st.button("⬇", key="dn", use_container_width=True):
+                move_player(1, 0); st.rerun()
+        with c3:
+            if st.button("➡", key="rgt", use_container_width=True):
+                move_player(0, 1); st.rerun()
+
+    # Close + reopen so maze sits flush (Streamlit inserts a gap after columns)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # ── MAZE TABLE ───────────────────────────────────────────────
     maze_rows = ""
     for r in range(len(maze.maze)):
         maze_rows += "<tr>"
@@ -216,25 +263,18 @@ with col_center:
                 maze_rows += f'<td class="cell-empty">{coord}</td>'
         maze_rows += "</tr>"
 
-    st.markdown(f'<table class="maze-table">{maze_rows}</table>', unsafe_allow_html=True)
+    st.markdown(
+        f'<div class="maze-container"><table class="maze-table">{maze_rows}</table></div>',
+        unsafe_allow_html=True,
+    )
 
-    # ── LEGEND ──────────────────────────────────────────────────
-    st.markdown("""
-    <div class="legend-row">
-      <span><span class="legend-dot" style="background:#00cc44"></span>Start</span>
-      <span><span class="legend-dot" style="background:#ff3333"></span>Goal</span>
-      <span><span class="legend-dot" style="background:#9900cc"></span>You</span>
-      <span><span class="legend-dot" style="background:#6495ed"></span>Your path</span>
-      <span><span class="legend-dot" style="background:#ffd700"></span>Explored</span>
-      <span><span class="legend-dot" style="background:#1a56cc"></span>AI path</span>
-      <span><span class="legend-dot" style="background:#111;border:1px solid #555"></span>Wall</span>
-      <span><span class="legend-dot" style="background:#ccc"></span>Open</span>
-    </div>
-    """, unsafe_allow_html=True)
+    # ── STEP CONTROLS — open container ───────────────────────────
+    st.markdown('<div class="maze-container">', unsafe_allow_html=True)
 
-    # ── STEP CONTROLS ───────────────────────────────────────────
-    st.markdown("<p style='text-align:center;font-weight:600;margin:4px 0 2px 0;'>⏩ Step-by-Step Controls</p>",
+    st.markdown("<p style='text-align:center;font-weight:600;margin:8px 0 2px 0;'>⏩ Step-by-Step Controls</p>",
                 unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
 
     if not algo:
         st.info("Run DFS, BFS, or A* to enable step controls.")
@@ -242,12 +282,15 @@ with col_center:
         prog  = (step + 1) if phase == "explore" else (path_step + 1)
         total = total_ex   if phase == "explore" else total_p
         label = "🔍 Exploration" if phase == "explore" else "🔵 Path Tracing"
-        st.markdown(f"<p style='text-align:center;margin:0;font-size:13px;'>"
-                    f"{label} &nbsp;—&nbsp; Step <b>{prog}</b> / <b>{total}</b></p>",
-                    unsafe_allow_html=True)
+        st.markdown(
+            f"<p style='text-align:center;margin:0;font-size:13px;'>"
+            f"{label} &nbsp;—&nbsp; Step <b>{prog}</b> / <b>{total}</b></p>",
+            unsafe_allow_html=True,
+        )
         st.progress(prog / total if total else 0)
 
-        s1, s2, s3, s4 = st.columns(4)
+        # Row 1: First | Prev | Next | Last  — 4 equal cols
+        s1, s2, s3, s4 = st.columns([1, 1, 1, 1], gap="small")
         with s1:
             if st.button("⏮ First", key="first", use_container_width=True):
                 st.session_state["step" if phase == "explore" else "path_step"] = 0
@@ -281,7 +324,8 @@ with col_center:
                     st.session_state.path_step = total_p - 1
                 st.rerun()
 
-        sk1, sk2 = st.columns(2)
+        # Row 2: Skip | Back — 2 equal cols
+        sk1, sk2 = st.columns([1, 1], gap="small")
         with sk1:
             if st.button("⏩ Skip → Path Phase", key="skip", use_container_width=True):
                 st.session_state.step      = total_ex - 1
@@ -293,6 +337,22 @@ with col_center:
                 st.session_state.phase     = "explore"
                 st.session_state.path_step = 0
                 st.rerun()
+
+    # ── LEGEND — below all controls ──────────────────────────────
+    st.markdown("""
+    <div class="maze-container">
+      <div class="legend-row">
+        <span><span class="legend-dot" style="background:#00cc44"></span>Start</span>
+        <span><span class="legend-dot" style="background:#ff3333"></span>Goal</span>
+        <span><span class="legend-dot" style="background:#9900cc"></span>You</span>
+        <span><span class="legend-dot" style="background:#6495ed"></span>Your path</span>
+        <span><span class="legend-dot" style="background:#ffd700"></span>Explored</span>
+        <span><span class="legend-dot" style="background:#1a56cc"></span>AI path</span>
+        <span><span class="legend-dot" style="background:#111;border:1px solid #555"></span>Wall</span>
+        <span><span class="legend-dot" style="background:#ccc"></span>Open</span>
+      </div>
+    </div>
+    """, unsafe_allow_html=True)
 
     st.markdown("---")
 
