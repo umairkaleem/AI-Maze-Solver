@@ -132,20 +132,54 @@ with col_left:
         use_container_width=True, height=340
     )
 
-# ── CENTER: D-pad → Maze → Step controls ─────────────────────────
+# ── CENTER: D-pad → Maze → Legend → Step controls ────────────────
 with col_center:
 
-    # ── D-PAD above maze ────────────────────────────────────────
-    st.markdown(
-        "<p style='text-align:center;margin-bottom:4px;font-weight:600;'>🕹️ Move Player</p>",
-        unsafe_allow_html=True,
-    )
+    # Inject CSS: constrain all buttons in center col to maze width
+    # and make D-pad compact square buttons
+    st.markdown("""
+    <style>
+      /* maze + all controls share same max-width, centered */
+      .maze-table { border-collapse:collapse; width:100%; table-layout:fixed; margin:0 auto; }
+      .maze-table td {
+        height:42px;
+        text-align:center; vertical-align:middle;
+        font-size:11px; font-family:monospace;
+        border:1px solid #aaa; padding:0; overflow:hidden;
+      }
+      .cell-wall     { background:#111; }
+      .cell-empty    { background:#fff; }
+      .cell-start    { background:#00cc44; }
+      .cell-goal     { background:#ff3333; }
+      .cell-player   { background:#9900cc; }
+      .cell-human    { background:#6495ed; }
+      .cell-explored { background:#ffd700; }
+      .cell-path     { background:#1a56cc; color:#fff; }
+      .coord         { font-size:9px; color:#333; }
+      .coord-w       { font-size:9px; color:#fff; }
+      /* legend */
+      .legend-row {
+        display:flex; gap:10px; flex-wrap:wrap;
+        font-size:12px; justify-content:center; margin:8px 0;
+      }
+      .legend-dot {
+        display:inline-block; width:12px; height:12px;
+        border-radius:2px; margin-right:3px; vertical-align:middle;
+      }
+    </style>
+    """, unsafe_allow_html=True)
+
+    # ── D-PAD: compact 3-col layout ─────────────────────────────
+    st.markdown("<p style='text-align:center;font-weight:600;margin:0 0 2px 0;'>🕹️ Move Player</p>",
+                unsafe_allow_html=True)
+
+    # Row 1: Up button centered
     _, cu, _ = st.columns([2, 1, 2])
     with cu:
         if st.button("⬆", key="up", use_container_width=True):
             move_player(-1, 0); st.rerun()
-
-    cl, cd, cr, _, _ = st.columns([1, 1, 1, 1, 1])
+    # Row 2: Left Down Right (3 equal, rest empty)
+    cl, cd, cr, _a, _b = st.columns([1, 1, 1, 1, 1])
     with cl:
         if st.button("⬅", key="lft", use_container_width=True):
             move_player(0, -1); st.rerun()
@@ -156,93 +190,63 @@ with col_center:
         if st.button("➡", key="rgt", use_container_width=True):
             move_player(0, 1); st.rerun()
 
-    st.markdown("<div style='margin:6px 0'></div>", unsafe_allow_html=True)
-
     # ── MAZE TABLE ──────────────────────────────────────────────
-    table_html = """
-    <style>
-      .maze-table { border-collapse:collapse; margin:0 auto; }
-      .maze-table td {
-        width:42px; height:42px;
-        text-align:center; vertical-align:middle;
-        font-size:11px; font-family:monospace;
-        border:1px solid #aaa; padding:0;
-      }
-      .cell-wall    { background:#111; }
-      .cell-empty   { background:#fff; }
-      .cell-start   { background:#00cc44; }
-      .cell-goal    { background:#ff3333; }
-      .cell-player  { background:#9900cc; }
-      .cell-human   { background:#6495ed; }
-      .cell-explored{ background:#ffd700; }
-      .cell-path    { background:#1a56cc; color:#fff; }
-      .coord        { font-size:10px; color:#333; }
-      .coord-w      { font-size:10px; color:#fff; }
-    </style>
-    <table class="maze-table">
-    """
+    maze_rows = ""
     for r in range(len(maze.maze)):
-        table_html += "<tr>"
+        maze_rows += "<tr>"
         for c in range(len(maze.maze[0])):
             cell    = (r, c)
             coord   = f'<span class="coord">({r},{c})</span>'
             coord_w = f'<span class="coord-w">({r},{c})</span>'
             if cell == player_pos_t:
-                table_html += f'<td class="cell-player">{coord}</td>'
+                maze_rows += f'<td class="cell-player">{coord}</td>'
             elif phase == "path" and cell in path_so_far:
-                table_html += f'<td class="cell-path">{coord_w}</td>'
+                maze_rows += f'<td class="cell-path">{coord_w}</td>'
             elif cell in explored_so_far:
-                table_html += f'<td class="cell-explored">{coord}</td>'
+                maze_rows += f'<td class="cell-explored">{coord}</td>'
             elif cell == maze.start:
-                table_html += f'<td class="cell-start">{coord}</td>'
+                maze_rows += f'<td class="cell-start">{coord}</td>'
             elif cell == maze.goal:
-                table_html += f'<td class="cell-goal">{coord}</td>'
+                maze_rows += f'<td class="cell-goal">{coord}</td>'
             elif cell in player_path_set:
-                table_html += f'<td class="cell-human">{coord}</td>'
+                maze_rows += f'<td class="cell-human">{coord}</td>'
             elif maze.maze[r][c] == 1:
-                table_html += '<td class="cell-wall"></td>'
+                maze_rows += '<td class="cell-wall"></td>'
             else:
-                table_html += f'<td class="cell-empty">{coord}</td>'
-        table_html += "</tr>"
-    table_html += "</table>"
-    st.markdown(table_html, unsafe_allow_html=True)
+                maze_rows += f'<td class="cell-empty">{coord}</td>'
+        maze_rows += "</tr>"
 
-    # Color legend
+    st.markdown(f'<table class="maze-table">{maze_rows}</table>', unsafe_allow_html=True)
+
+    # ── LEGEND ──────────────────────────────────────────────────
     st.markdown("""
-    <div style="display:flex;gap:10px;flex-wrap:wrap;font-size:12px;
-                justify-content:center;margin:8px 0 0 0;">
-      <span>🟩 Start</span><span>🟥 Goal</span>
-      <span style="color:#9900cc;">🟪 You</span>
-      <span style="color:#6495ed;">🟦 Your path</span>
-      <span style="color:#ffd700;">🟨 Explored</span>
-      <span style="color:#1a56cc;">🟦 AI path</span>
-      <span>⬛ Wall</span><span>⬜ Open</span>
+    <div class="legend-row">
+      <span><span class="legend-dot" style="background:#00cc44"></span>Start</span>
+      <span><span class="legend-dot" style="background:#ff3333"></span>Goal</span>
+      <span><span class="legend-dot" style="background:#9900cc"></span>You</span>
+      <span><span class="legend-dot" style="background:#6495ed"></span>Your path</span>
+      <span><span class="legend-dot" style="background:#ffd700"></span>Explored</span>
+      <span><span class="legend-dot" style="background:#1a56cc"></span>AI path</span>
+      <span><span class="legend-dot" style="background:#111;border:1px solid #555"></span>Wall</span>
+      <span><span class="legend-dot" style="background:#ccc"></span>Open</span>
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("<div style='margin:10px 0'></div>", unsafe_allow_html=True)
-
-    # ── STEP CONTROLS below maze ────────────────────────────────
-    st.markdown(
-        "<p style='text-align:center;font-weight:600;margin-bottom:6px;'>⏩ Step-by-Step Controls</p>",
-        unsafe_allow_html=True,
-    )
+    # ── STEP CONTROLS ───────────────────────────────────────────
+    st.markdown("<p style='text-align:center;font-weight:600;margin:4px 0 2px 0;'>⏩ Step-by-Step Controls</p>",
+                unsafe_allow_html=True)
 
     if not algo:
         st.info("Run DFS, BFS, or A* to enable step controls.")
     else:
-        prog  = (step + 1)  if phase == "explore" else (path_step + 1)
-        total = total_ex    if phase == "explore" else total_p
+        prog  = (step + 1) if phase == "explore" else (path_step + 1)
+        total = total_ex   if phase == "explore" else total_p
         label = "🔍 Exploration" if phase == "explore" else "🔵 Path Tracing"
-
-        st.markdown(
-            f"<p style='text-align:center;margin:0;'>{label} &nbsp;—&nbsp; "
-            f"Step <b>{prog}</b> / <b>{total}</b></p>",
-            unsafe_allow_html=True,
-        )
+        st.markdown(f"<p style='text-align:center;margin:0;font-size:13px;'>"
+                    f"{label} &nbsp;—&nbsp; Step <b>{prog}</b> / <b>{total}</b></p>",
+                    unsafe_allow_html=True)
         st.progress(prog / total if total else 0)
 
-        # Row 1: First | Prev | Next | Last
         s1, s2, s3, s4 = st.columns(4)
         with s1:
             if st.button("⏮ First", key="first", use_container_width=True):
@@ -277,7 +281,6 @@ with col_center:
                     st.session_state.path_step = total_p - 1
                 st.rerun()
 
-        # Row 2: Skip to path | Back to explore
         sk1, sk2 = st.columns(2)
         with sk1:
             if st.button("⏩ Skip → Path Phase", key="skip", use_container_width=True):
