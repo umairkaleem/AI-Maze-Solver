@@ -68,7 +68,7 @@ st.title("🧩 AI Maze Solver & Pathfinding Visualizer")
 
 st.markdown("""
 <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);
-            border-radius:10px;padding:14px 18px;margin-bottom:14px;
+            border-radius:8px;padding:6px 18px;margin-bottom:5px;
             border-left:5px solid #1a56a0;">
   <p style="font-size:15px;color:#e0e0e0;margin:0 0 8px 0;font-weight:600;">
     🎓 Hands-on AI learning &mdash;
