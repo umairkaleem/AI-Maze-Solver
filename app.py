@@ -187,36 +187,39 @@ with col_center:
         margin-right: 3px;
         vertical-align: middle;
       }
-      /* ── make ALL buttons in center col tall, narrow & centered ── */
+      /* ── make ALL buttons in center col compact & size-to-content ── */
       div[data-testid="stButton"] button {
         height: 34px;
         min-height: 34px;
-        font-size: 15px;
-        padding: 0px 6px;
+        font-size: 14px;
+        padding: 0px 10px;
         line-height: 1;
-        max-width: 110px;
-        width: 100% !important;
+        width: auto !important;
+        max-width: none !important;
+        white-space: nowrap;
         margin: 0 auto;
-        display: block;
       }
       /* remove the extra vertical gap Streamlit adds around button wrappers */
       div[data-testid="stButton"] {
-        margin: 0;
+        margin: 0 !important;
         display: flex;
         justify-content: center;
       }
       div[data-testid="column"] {
-        padding: 0 2px;
-        display: flex;
-        justify-content: center;
-        flex: 0 1 auto !important;
-        min-width: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: flex !important;
+        justify-content: center !important;
+        flex: 0 0 auto !important;
         width: auto !important;
+        min-width: 0 !important;
       }
       /* ── column gap ── */
       div[data-testid="stHorizontalBlock"] {
-        gap: 0.15rem;
-        justify-content: center;
+        gap: 0.1rem !important;
+        justify-content: center !important;
+        display: flex !important;
+        flex-wrap: nowrap !important;
       }
       /* ── mobile ── */
       @media (max-width: 768px) {
@@ -227,13 +230,14 @@ with col_center:
         div[data-testid="stButton"] button {
           height: 28px;
           min-height: 28px;
-          font-size: 12px;
-          padding: 0px 4px;
+          font-size: 11px;
+          padding: 0px 6px;
           line-height: 1;
-          max-width: 80px;
+          width: auto !important;
+          max-width: none !important;
         }
         div[data-testid="stHorizontalBlock"] {
-          gap: 0.1rem;
+          gap: 0.05rem !important;
         }
       }
     </style>
