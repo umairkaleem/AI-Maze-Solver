@@ -194,7 +194,7 @@ with col_center:
         font-size: 15px;
         padding: 0px 6px;
         line-height: 1;
-        max-width: 120px;
+        max-width: 110px;
         width: 100% !important;
         margin: 0 auto;
         display: block;
@@ -209,10 +209,14 @@ with col_center:
         padding: 0 2px;
         display: flex;
         justify-content: center;
+        flex: 0 1 auto !important;
+        min-width: 0 !important;
+        width: auto !important;
       }
       /* ── column gap ── */
       div[data-testid="stHorizontalBlock"] {
-        gap: 0.3rem;
+        gap: 0.15rem;
+        justify-content: center;
       }
       /* ── mobile ── */
       @media (max-width: 768px) {
@@ -226,10 +230,10 @@ with col_center:
           font-size: 12px;
           padding: 0px 4px;
           line-height: 1;
-          max-width: 90px;
+          max-width: 80px;
         }
         div[data-testid="stHorizontalBlock"] {
-          gap: 0.2rem;
+          gap: 0.1rem;
         }
       }
     </style>
