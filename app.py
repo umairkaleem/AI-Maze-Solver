@@ -194,7 +194,6 @@ with col_center:
         font-size: 15px;
         padding: 6px 8px;
         line-height: 1.3;
-        max-width: 110px;
         width: 100% !important;
         margin: 0 auto;
         display: block;
@@ -233,7 +232,6 @@ with col_center:
           font-size: 12px;
           padding: 4px 6px;
           line-height: 1.2;
-          max-width: 90px;
           white-space: normal;
           word-wrap: break-word;
         }
