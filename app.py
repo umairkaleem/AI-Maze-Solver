@@ -147,6 +147,14 @@ with col_center:
         max-width: 520px;
         margin: 0 auto;
       }
+      /* ── overall frame: D-pad, table, step controls, legend ── */
+      .st-key-maze_frame {
+        max-width: 520px;
+        margin: 0 auto;
+      }
+      .st-key-maze_frame div[data-testid="stHorizontalBlock"] {
+        width: 100%;
+      }
       /* ── maze table ── */
       .maze-table {
         width: 100%;
@@ -251,152 +259,153 @@ with col_center:
     </style>
     """, unsafe_allow_html=True)
 
-    # Open maze-container div
-    st.markdown('<div class="maze-container">', unsafe_allow_html=True)
+    with st.container(key="maze_frame"):
+        # Open maze-container div
+        st.markdown('<div class="maze-container">', unsafe_allow_html=True)
 
-    # ── D-PAD — large buttons, same style as step controls ───────
-    st.markdown("<p style='text-align:center;font-weight:600;margin:0 0 4px 0;'>🕹️ Move Player</p>",
-                unsafe_allow_html=True)
+        # ── D-PAD — large buttons, same style as step controls ───────
+        st.markdown("<p style='text-align:center;font-weight:600;margin:0 0 4px 0;'>🕹️ Move Player</p>",
+                    unsafe_allow_html=True)
 
-    # UP — centered, same width as the 3 bottom buttons combined
-    u1, u2, u3 = st.columns([1, 2, 1])
-    with u2:
-        if st.button("⬆", key="up", use_container_width=True):
-            move_player(-1, 0); st.rerun()
+        # UP — centered, same width as the 3 bottom buttons combined
+        u1, u2, u3 = st.columns([1, 2, 1])
+        with u2:
+            if st.button("⬆", key="up", use_container_width=True):
+                move_player(-1, 0); st.rerun()
 
-    # LEFT / DOWN / RIGHT — centered block matching UP width
-    l1, l2, l3 = st.columns([1, 2, 1])
-    with l2:
-        c1, c2, c3 = st.columns(3)
-        with c1:
-            if st.button("⬅", key="lft", use_container_width=True):
-                move_player(0, -1); st.rerun()
-        with c2:
-            if st.button("⬇", key="dn", use_container_width=True):
-                move_player(1, 0); st.rerun()
-        with c3:
-            if st.button("➡", key="rgt", use_container_width=True):
-                move_player(0, 1); st.rerun()
+        # LEFT / DOWN / RIGHT — centered block matching UP width
+        l1, l2, l3 = st.columns([1, 2, 1])
+        with l2:
+            c1, c2, c3 = st.columns(3)
+            with c1:
+                if st.button("⬅", key="lft", use_container_width=True):
+                    move_player(0, -1); st.rerun()
+            with c2:
+                if st.button("⬇", key="dn", use_container_width=True):
+                    move_player(1, 0); st.rerun()
+            with c3:
+                if st.button("➡", key="rgt", use_container_width=True):
+                    move_player(0, 1); st.rerun()
 
-    # Close + reopen so maze sits flush (Streamlit inserts a gap after columns)
-    st.markdown('</div>', unsafe_allow_html=True)
+        # Close + reopen so maze sits flush (Streamlit inserts a gap after columns)
+        st.markdown('</div>', unsafe_allow_html=True)
 
-    # ── MAZE TABLE ───────────────────────────────────────────────
-    maze_rows = ""
-    for r in range(len(maze.maze)):
-        maze_rows += "<tr>"
-        for c in range(len(maze.maze[0])):
-            cell    = (r, c)
-            coord   = f'<span class="coord">({r},{c})</span>'
-            coord_w = f'<span class="coord-w">({r},{c})</span>'
-            if cell == player_pos_t:
-                maze_rows += f'<td class="cell-player">{coord}</td>'
-            elif phase == "path" and cell in path_so_far:
-                maze_rows += f'<td class="cell-path">{coord_w}</td>'
-            elif cell in explored_so_far:
-                maze_rows += f'<td class="cell-explored">{coord}</td>'
-            elif cell == maze.start:
-                maze_rows += f'<td class="cell-start">{coord}</td>'
-            elif cell == maze.goal:
-                maze_rows += f'<td class="cell-goal">{coord}</td>'
-            elif cell in player_path_set:
-                maze_rows += f'<td class="cell-human">{coord}</td>'
-            elif maze.maze[r][c] == 1:
-                maze_rows += '<td class="cell-wall"></td>'
-            else:
-                maze_rows += f'<td class="cell-empty">{coord}</td>'
-        maze_rows += "</tr>"
+        # ── MAZE TABLE ───────────────────────────────────────────────
+        maze_rows = ""
+        for r in range(len(maze.maze)):
+            maze_rows += "<tr>"
+            for c in range(len(maze.maze[0])):
+                cell    = (r, c)
+                coord   = f'<span class="coord">({r},{c})</span>'
+                coord_w = f'<span class="coord-w">({r},{c})</span>'
+                if cell == player_pos_t:
+                    maze_rows += f'<td class="cell-player">{coord}</td>'
+                elif phase == "path" and cell in path_so_far:
+                    maze_rows += f'<td class="cell-path">{coord_w}</td>'
+                elif cell in explored_so_far:
+                    maze_rows += f'<td class="cell-explored">{coord}</td>'
+                elif cell == maze.start:
+                    maze_rows += f'<td class="cell-start">{coord}</td>'
+                elif cell == maze.goal:
+                    maze_rows += f'<td class="cell-goal">{coord}</td>'
+                elif cell in player_path_set:
+                    maze_rows += f'<td class="cell-human">{coord}</td>'
+                elif maze.maze[r][c] == 1:
+                    maze_rows += '<td class="cell-wall"></td>'
+                else:
+                    maze_rows += f'<td class="cell-empty">{coord}</td>'
+            maze_rows += "</tr>"
 
-    st.markdown(
-        f'<div class="maze-table-wrap"><table class="maze-table">{maze_rows}</table></div>',
-        unsafe_allow_html=True,
-    )
-
-    # ── STEP CONTROLS — open container ───────────────────────────
-    st.markdown('<div class="maze-container">', unsafe_allow_html=True)
-
-    st.markdown("<p style='text-align:center;font-weight:600;margin:8px 0 2px 0;'>⏩ Step-by-Step Controls</p>",
-                unsafe_allow_html=True)
-
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    if not algo:
-        st.info("Run DFS, BFS, or A* to enable step controls.")
-    else:
-        prog  = (step + 1) if phase == "explore" else (path_step + 1)
-        total = total_ex   if phase == "explore" else total_p
-        label = "🔍 Exploration" if phase == "explore" else "🔵 Path Tracing"
         st.markdown(
-            f"<p style='text-align:center;margin:0;font-size:13px;'>"
-            f"{label} &nbsp;—&nbsp; Step <b>{prog}</b> / <b>{total}</b></p>",
+            f'<div class="maze-table-wrap"><table class="maze-table">{maze_rows}</table></div>',
             unsafe_allow_html=True,
         )
-        st.progress(prog / total if total else 0)
 
-        # Row 1: First | Prev | Next | Last  — 4 equal cols
-        s1, s2, s3, s4 = st.columns([1, 1, 1, 1], gap="small")
-        with s1:
-            if st.button("⏮ First", key="first", use_container_width=True):
-                st.session_state["step" if phase == "explore" else "path_step"] = 0
-                st.rerun()
-        with s2:
-            if st.button("◀ Prev", key="prev", use_container_width=True):
-                if phase == "path" and path_step > 0:
-                    st.session_state.path_step -= 1
-                elif phase == "path" and path_step == 0:
-                    st.session_state.phase = "explore"
-                    st.session_state.step  = total_ex - 1
-                elif phase == "explore" and step > 0:
-                    st.session_state.step -= 1
-                st.rerun()
-        with s3:
-            if st.button("Next ▶", key="nxt", use_container_width=True):
-                if phase == "explore":
-                    if step < total_ex - 1:
-                        st.session_state.step += 1
+        # ── STEP CONTROLS — open container ───────────────────────────
+        st.markdown('<div class="maze-container">', unsafe_allow_html=True)
+
+        st.markdown("<p style='text-align:center;font-weight:600;margin:8px 0 2px 0;'>⏩ Step-by-Step Controls</p>",
+                    unsafe_allow_html=True)
+
+        st.markdown('</div>', unsafe_allow_html=True)
+
+        if not algo:
+            st.info("Run DFS, BFS, or A* to enable step controls.")
+        else:
+            prog  = (step + 1) if phase == "explore" else (path_step + 1)
+            total = total_ex   if phase == "explore" else total_p
+            label = "🔍 Exploration" if phase == "explore" else "🔵 Path Tracing"
+            st.markdown(
+                f"<p style='text-align:center;margin:0;font-size:13px;'>"
+                f"{label} &nbsp;—&nbsp; Step <b>{prog}</b> / <b>{total}</b></p>",
+                unsafe_allow_html=True,
+            )
+            st.progress(prog / total if total else 0)
+
+            # Row 1: First | Prev | Next | Last  — 4 equal cols
+            s1, s2, s3, s4 = st.columns([1, 1, 1, 1], gap="small")
+            with s1:
+                if st.button("⏮ First", key="first", use_container_width=True):
+                    st.session_state["step" if phase == "explore" else "path_step"] = 0
+                    st.rerun()
+            with s2:
+                if st.button("◀ Prev", key="prev", use_container_width=True):
+                    if phase == "path" and path_step > 0:
+                        st.session_state.path_step -= 1
+                    elif phase == "path" and path_step == 0:
+                        st.session_state.phase = "explore"
+                        st.session_state.step  = total_ex - 1
+                    elif phase == "explore" and step > 0:
+                        st.session_state.step -= 1
+                    st.rerun()
+            with s3:
+                if st.button("Next ▶", key="nxt", use_container_width=True):
+                    if phase == "explore":
+                        if step < total_ex - 1:
+                            st.session_state.step += 1
+                        else:
+                            st.session_state.phase     = "path"
+                            st.session_state.path_step = 0
+                    elif path_step < total_p - 1:
+                        st.session_state.path_step += 1
+                    st.rerun()
+            with s4:
+                if st.button("Last ⏭", key="last", use_container_width=True):
+                    if phase == "explore":
+                        st.session_state.step = total_ex - 1
                     else:
-                        st.session_state.phase     = "path"
-                        st.session_state.path_step = 0
-                elif path_step < total_p - 1:
-                    st.session_state.path_step += 1
-                st.rerun()
-        with s4:
-            if st.button("Last ⏭", key="last", use_container_width=True):
-                if phase == "explore":
-                    st.session_state.step = total_ex - 1
-                else:
-                    st.session_state.path_step = total_p - 1
-                st.rerun()
+                        st.session_state.path_step = total_p - 1
+                    st.rerun()
 
-        # Row 2: Skip | Back — 2 equal cols
-        sk1, sk2 = st.columns([1, 1], gap="small")
-        with sk1:
-            if st.button("⏩ Skip → Path Phase", key="skip", use_container_width=True):
-                st.session_state.step      = total_ex - 1
-                st.session_state.phase     = "path"
-                st.session_state.path_step = 0
-                st.rerun()
-        with sk2:
-            if st.button("↩ Back → Explore Phase", key="back", use_container_width=True):
-                st.session_state.phase     = "explore"
-                st.session_state.path_step = 0
-                st.rerun()
+            # Row 2: Skip | Back — 2 equal cols
+            sk1, sk2 = st.columns([1, 1], gap="small")
+            with sk1:
+                if st.button("⏩ Skip → Path Phase", key="skip", use_container_width=True):
+                    st.session_state.step      = total_ex - 1
+                    st.session_state.phase     = "path"
+                    st.session_state.path_step = 0
+                    st.rerun()
+            with sk2:
+                if st.button("↩ Back → Explore Phase", key="back", use_container_width=True):
+                    st.session_state.phase     = "explore"
+                    st.session_state.path_step = 0
+                    st.rerun()
 
-    # ── LEGEND — below all controls ──────────────────────────────
-    st.markdown("""
-    <div class="maze-container">
-      <div class="legend-row">
-        <span><span class="legend-dot" style="background:#00cc44"></span>Start</span>
-        <span><span class="legend-dot" style="background:#ff3333"></span>Goal</span>
-        <span><span class="legend-dot" style="background:#9900cc"></span>You</span>
-        <span><span class="legend-dot" style="background:#6495ed"></span>Your path</span>
-        <span><span class="legend-dot" style="background:#ffd700"></span>Explored</span>
-        <span><span class="legend-dot" style="background:#1a56cc"></span>AI path</span>
-        <span><span class="legend-dot" style="background:#111;border:1px solid #555"></span>Wall</span>
-        <span><span class="legend-dot" style="background:#ccc"></span>Open</span>
-      </div>
-    </div>
-    """, unsafe_allow_html=True)
+        # ── LEGEND — below all controls ──────────────────────────────
+        st.markdown("""
+        <div class="maze-container">
+          <div class="legend-row">
+            <span><span class="legend-dot" style="background:#00cc44"></span>Start</span>
+            <span><span class="legend-dot" style="background:#ff3333"></span>Goal</span>
+            <span><span class="legend-dot" style="background:#9900cc"></span>You</span>
+            <span><span class="legend-dot" style="background:#6495ed"></span>Your path</span>
+            <span><span class="legend-dot" style="background:#ffd700"></span>Explored</span>
+            <span><span class="legend-dot" style="background:#1a56cc"></span>AI path</span>
+            <span><span class="legend-dot" style="background:#111;border:1px solid #555"></span>Wall</span>
+            <span><span class="legend-dot" style="background:#ccc"></span>Open</span>
+          </div>
+        </div>
+        """, unsafe_allow_html=True)
 
     st.markdown("---")
 
